@@ -14,21 +14,19 @@ const[search,setSearch]=useState('')
 useEffect(()=>{if(auth)fetchUsers()},[auth])
 async function fetchUsers(){setLoading(true);const{data}=await sb.from('silica_quiz_users').select('*').order('total_xp',{ascending:false});if(data)setUsers(data as User[]);setLoading(false)}
 function login(){if(pass===ADMIN_PASS){setAuth(true);setPassErr('')}else{setPassErr('パスワードが違います')}}
-function downloadCSV(){
-  const top5=users.slice(0,5)
+function makeCSV(list:User[]){
   const header='順位,ニックネーム,お名前,メール,電話番号,郵便番号,住所,累計XP,登録日'
-  const rows=top5.map((u,i)=>[i+1,u.nickname,u.name,u.email,u.tel,u.postal,u.address,u.total_xp,u.created_at.slice(0,10)].join(','))
-  const csv='﻿'+[header,...rows].join('
-')
+  const rows=list.map((u,i)=>[i+1,u.nickname,u.name,u.email,u.tel,u.postal,u.address,u.total_xp,u.created_at.slice(0,10)].join(','))
+  return '\uFEFF'+[header,...rows].join('\n')
+}
+function downloadCSV(){
+  const csv=makeCSV(users.slice(0,5))
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'})
   const url=URL.createObjectURL(blob)
   const a=document.createElement('a');a.href=url;a.download='silica_quiz_top5.csv';a.click()
 }
 function downloadAllCSV(){
-  const header='順位,ニックネーム,お名前,メール,電話番号,郵便番号,住所,累計XP,登録日'
-  const rows=users.map((u,i)=>[i+1,u.nickname,u.name,u.email,u.tel,u.postal,u.address,u.total_xp,u.created_at.slice(0,10)].join(','))
-  const csv='﻿'+[header,...rows].join('
-')
+  const csv=makeCSV(users)
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'})
   const url=URL.createObjectURL(blob)
   const a=document.createElement('a');a.href=url;a.download='silica_quiz_all.csv';a.click()
@@ -59,9 +57,7 @@ return(<div style={S.page}>
       </div>))}
     </div>
     <div style={S.card}>
-      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
-        <h2 style={{margin:0,fontSize:'1rem',fontWeight:900,color:'#2d3a4a'}}>🏆 プレゼント対象 TOP5</h2>
-      </div>
+      <h2 style={{margin:'0 0 14px',fontSize:'1rem',fontWeight:900,color:'#2d3a4a'}}>🏆 プレゼント対象 TOP5</h2>
       {users.slice(0,5).map((u,i)=>(<div key={u.id} style={{display:'flex',gap:12,alignItems:'center',padding:'12px 14px',borderRadius:12,marginBottom:8,background:i===0?'#fff9e6':i===1?'#f8f8f8':i===2?'#f0faff':'#fafafa',border:i===0?'2px solid #ffd166':i===1?'1.5px solid #ccc':i===2?'1.5px solid #b0d8ff':'1.5px solid #eee'}}>
         <span style={{fontSize:'1.4rem'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':i===3?'4️⃣':'5️⃣'}</span>
         <div style={{flex:1,minWidth:0}}>
