@@ -22,7 +22,7 @@ async function lookupPostal(postal:string){
   const code=postal.replace(/-/g,'')
   if(code.length!==7)return
   try{
-    const r=await fetch('https://zipcloud.iberia.es/api/search?zipcode='+code)
+    const r=await fetch('/api/zipcode?zipcode='+code)
     const d=await r.json()
     if(d.results&&d.results[0]){
       const res=d.results[0]
