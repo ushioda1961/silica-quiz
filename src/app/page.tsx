@@ -18,6 +18,19 @@ const[form,setForm]=useState({nickname:'',name:'',postal:'',address:'',tel:'',em
 const[err,setErr]=useState('')
 const[loading,setLoading]=useState(false)
 const f=(k:string,v:string)=>setForm(p=>({...p,[k]:v}))
+async function lookupPostal(postal:string){
+  const code=postal.replace(/-/g,'')
+  if(code.length!==7)return
+  try{
+    const r=await fetch('https://zipcloud.iberia.es/api/search?zipcode='+code)
+    const d=await r.json()
+    if(d.results&&d.results[0]){
+      const res=d.results[0]
+      const addr=res.address1+res.address2+res.address3
+      setForm(p=>({...p,address:addr}))
+    }
+  }catch(e){}
+}
 async function submit(){
   setErr('')
   const{nickname,name,postal,address,tel,email}=form
@@ -116,7 +129,7 @@ return(<div style={S.page}><div style={S.inner}>
     <div style={{background:'rgba(255,255,255,0.1)',borderRadius:20,padding:24}}>
       {[{k:'nickname',lb:'ニックネーム（ランキング表示名）',ph:'例：シリカファン、健康マスター',type:'text'},{k:'name',lb:'お名前（本名）',ph:'例：山田 花子',type:'text'},{k:'email',lb:'メールアドレス',ph:'例：example@email.com',type:'email'},{k:'tel',lb:'電話番号',ph:'例：090-1234-5678',type:'tel'},{k:'postal',lb:'郵便番号',ph:'例：100-0001',type:'text'},{k:'address',lb:'住所（都道府県〜番地）',ph:'例：東京都千代田区1-1-1',type:'text'}].map(({k,lb,ph,type})=>(<div key={k} style={{marginBottom:14}}>
         <label style={{fontSize:'0.78rem',fontWeight:700,color:'rgba(255,255,255,0.7)',display:'block',marginBottom:4}}>{lb}</label>
-        <input type={type} value={(form as Record<string,string>)[k]} onChange={e=>f(k,e.target.value)} placeholder={ph}
+        <input type={type} value={(form as Record<string,string>)[k]} onChange={e=>{f(k,e.target.value);if(k==='postal')lookupPostal(e.target.value)}} placeholder={ph}
           style={{width:'100%',padding:'12px 14px',borderRadius:12,border:'1.5px solid rgba(255,255,255,0.2)',background:'rgba(255,255,255,0.12)',color:'white',fontSize:'0.95rem',fontFamily:'inherit',boxSizing:'border-box',outline:'none'}}/>
       </div>))}
       <div style={{background:'rgba(255,255,255,0.08)',borderRadius:10,padding:'10px 14px',marginBottom:14}}>
