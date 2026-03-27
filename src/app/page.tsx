@@ -8,7 +8,7 @@ const BASE='https://frxfqbfvzxdjocwnrsbg.supabase.co/storage/v1/object/public/qu
 const PRIZES=[
 {rank:1,icon:'🥇',award:'優勝・インナーケア賞',items:'ホワイトシリカ１L・ハピネスシリカ',price:'約25,000円相当',img:BASE+'001.png',color:'#fff9e6',border:'#ffd166',badge:'#ff8c00'},
 {rank:2,icon:'🥈',award:'２位・スキンケア賞',items:'バランスシリカ・シリカの石鹸・m.SILICA',price:'約10,000円相当',img:BASE+'002.png',color:'#f8f8f8',border:'#cccccc',badge:'#888888'},
-{rank:3,icon:'🥉',award:'３位・ヘアケア賞',items:'アップルシリカシャンプー・スタイルシリカ',price:'約6,000円相当',img:BASE+'prize_haircare.jpg',color:'#fff4ee',border:'#e8a87c',badge:'#c0603a'},
+{rank:3,icon:'🥉',award:'３位・ヘアケア賞',items:'アップルシリカシャンプー・スタイルシリカ',price:'約6,000円相当',img:BASE+'003.png',color:'#fff4ee',border:'#e8a87c',badge:'#c0603a'},
 {rank:4,icon:'4️⃣',award:'４位・フードケア賞',items:'びおすーぷ・乳酸菌シリカジュレ・超濃縮海洋ミネラル水',price:'約14,000円相当',img:BASE+'prize_foodcare.jpg',color:'#f0faff',border:'#b0d8ff',badge:'#1a8cc7'},
 {rank:5,icon:'5️⃣',award:'５位・マインドケア賞',items:'ブルーシリカ（176g）',price:'約77,000円相当',img:BASE+'prize_mindcare.jpg',color:'#f0fff4',border:'#9fe1cb',badge:'#0f6e56'},
 ]
