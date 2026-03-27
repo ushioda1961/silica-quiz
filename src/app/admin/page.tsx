@@ -11,26 +11,27 @@ const[passErr,setPassErr]=useState('')
 const[users,setUsers]=useState<User[]>([])
 const[loading,setLoading]=useState(false)
 const[search,setSearch]=useState('')
+const[deleteTarget,setDeleteTarget]=useState<User|null>(null)
+const[deleting,setDeleting]=useState(false)
 useEffect(()=>{if(auth)fetchUsers()},[auth])
 async function fetchUsers(){setLoading(true);const{data}=await sb.from('silica_quiz_users').select('*').order('total_xp',{ascending:false});if(data)setUsers(data as User[]);setLoading(false)}
 function login(){if(pass===ADMIN_PASS){setAuth(true);setPassErr('')}else{setPassErr('パスワードが違います')}}
+async function deleteUser(){
+  if(!deleteTarget)return
+  setDeleting(true)
+  await sb.from('silica_quiz_sessions').delete().eq('user_id',deleteTarget.id)
+  await sb.from('silica_quiz_users').delete().eq('id',deleteTarget.id)
+  setDeleteTarget(null)
+  setDeleting(false)
+  await fetchUsers()
+}
 function makeCSV(list:User[]){
   const header='順位,ニックネーム,お名前,メール,電話番号,郵便番号,住所,累計XP,登録日'
   const rows=list.map((u,i)=>[i+1,u.nickname,u.name,u.email,u.tel,u.postal,u.address,u.total_xp,u.created_at.slice(0,10)].join(','))
   return '\uFEFF'+[header,...rows].join('\n')
 }
-function downloadCSV(){
-  const csv=makeCSV(users.slice(0,5))
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'})
-  const url=URL.createObjectURL(blob)
-  const a=document.createElement('a');a.href=url;a.download='silica_quiz_top5.csv';a.click()
-}
-function downloadAllCSV(){
-  const csv=makeCSV(users)
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'})
-  const url=URL.createObjectURL(blob)
-  const a=document.createElement('a');a.href=url;a.download='silica_quiz_all.csv';a.click()
-}
+function downloadCSV(){const csv=makeCSV(users.slice(0,5));const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='silica_quiz_top5.csv';a.click()}
+function downloadAllCSV(){const csv=makeCSV(users);const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='silica_quiz_all.csv';a.click()}
 const filtered=users.filter(u=>u.nickname.includes(search)||u.name.includes(search)||u.email.includes(search))
 const S={page:{minHeight:'100vh',background:'#f0f4f8',fontFamily:'sans-serif',padding:'24px 16px'},card:{background:'white',borderRadius:16,padding:24,boxShadow:'0 2px 12px rgba(0,0,0,0.08)',marginBottom:16}}
 if(!auth)return(<div style={S.page}><div style={{...S.card,maxWidth:400,margin:'80px auto'}}>
@@ -65,9 +66,12 @@ return(<div style={S.page}>
           <div style={{fontSize:'0.78rem',color:'#6b7f92',marginTop:2}}>📧 {u.email} ｜ 📞 {u.tel}</div>
           <div style={{fontSize:'0.78rem',color:'#6b7f92'}}>📮 〒{u.postal} {u.address}</div>
         </div>
-        <div style={{textAlign:'right',flexShrink:0}}>
-          <div style={{fontWeight:900,color:'#1a8cc7',fontSize:'1.1rem'}}>{u.total_xp.toLocaleString()} XP</div>
-          <div style={{fontSize:'0.7rem',color:'#aab'}}>{u.created_at.slice(0,10)}登録</div>
+        <div style={{display:'flex',alignItems:'center',gap:10,flexShrink:0}}>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontWeight:900,color:'#1a8cc7',fontSize:'1.1rem'}}>{u.total_xp.toLocaleString()} XP</div>
+            <div style={{fontSize:'0.7rem',color:'#aab'}}>{u.created_at.slice(0,10)}登録</div>
+          </div>
+          <button onClick={()=>setDeleteTarget(u)} style={{padding:'6px 12px',background:'#fff0f0',border:'1.5px solid #ffbaba',borderRadius:8,cursor:'pointer',color:'#e00',fontWeight:700,fontSize:'0.8rem',whiteSpace:'nowrap'}}>🗑️ 削除</button>
         </div>
       </div>))}
       {users.length===0&&!loading&&<p style={{color:'#aab',textAlign:'center',padding:20}}>まだ参加者がいません</p>}
@@ -81,7 +85,7 @@ return(<div style={S.page}>
       </div>
       <div style={{overflowX:'auto'}}>
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:'0.82rem'}}>
-          <thead><tr style={{background:'#f0f4f8'}}>{['順位','ニックネーム','お名前','メール','電話','郵便番号','住所','XP','登録日'].map(h=>(<th key={h} style={{padding:'8px 10px',textAlign:'left',fontWeight:700,color:'#6b7f92',whiteSpace:'nowrap'}}>{h}</th>))}</tr></thead>
+          <thead><tr style={{background:'#f0f4f8'}}>{['順位','ニックネーム','お名前','メール','電話','郵便番号','住所','XP','登録日','操作'].map(h=>(<th key={h} style={{padding:'8px 10px',textAlign:'left',fontWeight:700,color:'#6b7f92',whiteSpace:'nowrap'}}>{h}</th>))}</tr></thead>
           <tbody>{filtered.map((u,i)=>(<tr key={u.id} style={{borderBottom:'1px solid #f0f0f0',background:i<5?'rgba(59,191,239,0.04)':'white'}}>
             <td style={{padding:'8px 10px',fontWeight:700,color:i<5?'#1a8cc7':'#2d3a4a'}}>#{i+1}{i<5?' 🎁':''}</td>
             <td style={{padding:'8px 10px',fontWeight:700}}>{u.nickname}</td>
@@ -92,11 +96,33 @@ return(<div style={S.page}>
             <td style={{padding:'8px 10px',color:'#6b7f92'}}>{u.address}</td>
             <td style={{padding:'8px 10px',fontWeight:700,color:'#1a8cc7',whiteSpace:'nowrap'}}>{u.total_xp.toLocaleString()} XP</td>
             <td style={{padding:'8px 10px',color:'#aab',whiteSpace:'nowrap'}}>{u.created_at.slice(0,10)}</td>
+            <td style={{padding:'8px 10px'}}>
+              <button onClick={()=>setDeleteTarget(u)} style={{padding:'4px 10px',background:'#fff0f0',border:'1.5px solid #ffbaba',borderRadius:6,cursor:'pointer',color:'#e00',fontWeight:700,fontSize:'0.78rem',whiteSpace:'nowrap'}}>🗑️ 削除</button>
+            </td>
           </tr>))}</tbody>
         </table>
         {filtered.length===0&&<p style={{color:'#aab',textAlign:'center',padding:20}}>該当者なし</p>}
       </div>
     </div>
   </div>
+  {deleteTarget&&(<div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
+    <div style={{background:'white',borderRadius:20,padding:32,maxWidth:400,width:'90%',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,0.2)'}}>
+      <div style={{fontSize:'2.5rem',marginBottom:12}}>🗑️</div>
+      <h2 style={{fontSize:'1.1rem',fontWeight:900,color:'#2d3a4a',marginBottom:8}}>アカウントを削除</h2>
+      <div style={{background:'#fff0f0',border:'1.5px solid #ffbaba',borderRadius:12,padding:'12px 16px',marginBottom:16,textAlign:'left'}}>
+        <p style={{margin:'0 0 4px',fontWeight:700,color:'#2d3a4a'}}>{deleteTarget.nickname} さん</p>
+        <p style={{margin:'0 0 2px',fontSize:'0.82rem',color:'#6b7f92'}}>お名前：{deleteTarget.name}</p>
+        <p style={{margin:'0 0 2px',fontSize:'0.82rem',color:'#6b7f92'}}>メール：{deleteTarget.email}</p>
+        <p style={{margin:0,fontSize:'0.82rem',color:'#1a8cc7',fontWeight:700}}>累計 {deleteTarget.total_xp.toLocaleString()} XP</p>
+      </div>
+      <p style={{fontSize:'0.82rem',color:'#e00',fontWeight:700,marginBottom:20}}>⚠️ クイズ履歴も含めて完全に削除されます。<br/>この操作は取り消せません。</p>
+      <div style={{display:'flex',gap:10}}>
+        <button onClick={()=>setDeleteTarget(null)} disabled={deleting} style={{flex:1,padding:12,background:'#f0f0f0',border:'none',borderRadius:12,fontSize:'0.95rem',fontWeight:700,cursor:'pointer',fontFamily:'inherit'}}>キャンセル</button>
+        <button onClick={deleteUser} disabled={deleting} style={{flex:1,padding:12,background:'linear-gradient(135deg,#ef476f,#c0003a)',color:'white',border:'none',borderRadius:12,fontSize:'0.95rem',fontWeight:700,cursor:deleting?'default':'pointer',fontFamily:'inherit',opacity:deleting?0.7:1}}>
+          {deleting?'削除中...':'削除する'}
+        </button>
+      </div>
+    </div>
+  </div>)}
 </div>)
 }
