@@ -36,7 +36,7 @@ const S={page:{minHeight:'100vh',background:'linear-gradient(160deg,#0a2a4a 0%,#
 return(<div style={S.page}><div style={S.inner}>
 {step==='top'&&<>
   <div style={{textAlign:'center',padding:'48px 0 32px'}}>
-    <div style={{marginBottom:16,display:'flex',justifyContent:'center'}}><img src='https://frxfqbfvzxdjocwnrsbg.supabase.co/storage/v1/object/public/quiz-images/005.png' alt='シリカくん' style={{width:140,height:140,objectFit:'contain',filter:'drop-shadow(0 4px 16px rgba(59,191,239,0.4))'}}/></div>
+    <div style={{marginBottom:16,display:'flex',justifyContent:'center'}}><img src='https://frxfqbfvzxdjocwnrsbg.supabase.co/storage/v1/object/public/quiz-images/silica.png' alt='シリカくん' style={{width:140,height:140,objectFit:'contain',filter:'drop-shadow(0 4px 16px rgba(59,191,239,0.4))'}}/></div>
     <div style={{display:'inline-block',background:'rgba(255,215,0,0.2)',border:'1.5px solid #ffd700',borderRadius:20,padding:'6px 18px',fontSize:'0.8rem',fontWeight:800,color:'#ffd700',marginBottom:16,letterSpacing:'0.05em'}}>期間限定イベント開催中</div>
     <h1 style={{fontSize:'1.8rem',fontWeight:900,lineHeight:1.3,marginBottom:12}}>シリカ健康クイズ<br/><span style={{color:'#3bbfef'}}>チャレンジ！</span></h1>
     <p style={{fontSize:'0.95rem',color:'rgba(255,255,255,0.8)',lineHeight:1.7,marginBottom:24}}>シリカと健康の知識を楽しみながら学んで、<br/>毎日クイズに挑戦！上位入賞者には<br/><strong style={{color:'#ffd700'}}>シリカ製品をプレゼント🎁</strong></p>
