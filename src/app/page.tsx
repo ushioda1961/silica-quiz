@@ -4,6 +4,14 @@ import{createClient}from'@supabase/supabase-js'
 const sb=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 const EVENT_START='2025-05-01'
 const EVENT_END='2025-05-31'
+const BASE='https://frxfqbfvzxdjocwnrsbg.supabase.co/storage/v1/object/public/quiz-images/'
+const PRIZES=[
+{rank:1,icon:'🥇',award:'優勝・インナーケア賞',items:'ホワイトシリカ１L・ホワイトシリカ',price:'約25,000円相当',img:BASE+'prize_innercare.jpg',color:'#fff9e6',border:'#ffd166',badge:'#ff8c00'},
+{rank:2,icon:'🥈',award:'２位・スキンケア賞',items:'バランスシリカ・シリカの石鹸・m.SILICA',price:'約10,000円相当',img:BASE+'prize_skincare.jpg',color:'#f8f8f8',border:'#cccccc',badge:'#888888'},
+{rank:3,icon:'🥉',award:'３位・ヘアケア賞',items:'アップルシリカシャンプー・スタイルシリカ',price:'約6,000円相当',img:BASE+'prize_haircare.jpg',color:'#fff4ee',border:'#e8a87c',badge:'#c0603a'},
+{rank:4,icon:'4️⃣',award:'４位・フードケア賞',items:'びおすーぷ・乳酸菌シリカジュレ・超濃縮海洋ミネラル水',price:'約14,000円相当',img:BASE+'prize_foodcare.jpg',color:'#f0faff',border:'#b0d8ff',badge:'#1a8cc7'},
+{rank:5,icon:'5️⃣',award:'５位・マインドケア賞',items:'ブルーシリカ（176g）',price:'約77,000円相当',img:BASE+'prize_mindcare.jpg',color:'#f0fff4',border:'#9fe1cb',badge:'#0f6e56'},
+]
 export default function LP(){
 const[step,setStep]=useState<'top'|'form'|'done'>('top')
 const[form,setForm]=useState({nickname:'',name:'',postal:'',address:'',tel:'',email:''})
@@ -32,16 +40,30 @@ return(<div style={S.page}><div style={S.inner}>
     <div style={{display:'inline-block',background:'rgba(255,215,0,0.2)',border:'1.5px solid #ffd700',borderRadius:20,padding:'6px 18px',fontSize:'0.8rem',fontWeight:800,color:'#ffd700',marginBottom:16,letterSpacing:'0.05em'}}>期間限定イベント開催中</div>
     <h1 style={{fontSize:'1.8rem',fontWeight:900,lineHeight:1.3,marginBottom:12}}>シリカ健康クイズ<br/><span style={{color:'#3bbfef'}}>チャレンジ！</span></h1>
     <p style={{fontSize:'0.95rem',color:'rgba(255,255,255,0.8)',lineHeight:1.7,marginBottom:24}}>シリカと健康の知識を楽しみながら学んで、<br/>毎日クイズに挑戦！上位入賞者には<br/><strong style={{color:'#ffd700'}}>シリカ製品をプレゼント🎁</strong></p>
-    <div style={{background:'rgba(255,255,255,0.1)',border:'1.5px solid rgba(255,255,255,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:32,textAlign:'left'}}>
+    <div style={{background:'rgba(255,255,255,0.1)',border:'1.5px solid rgba(255,255,255,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:24,textAlign:'left'}}>
       <div style={{fontWeight:900,fontSize:'1rem',marginBottom:12,textAlign:'center',color:'#3bbfef'}}>📋 イベント概要</div>
       {[['📅','開催期間',EVENT_START+' 〜 '+EVENT_END],['❓','1日の挑戦','2セット×5問＝1日10問'],['🏆','プレゼント','上位5名にシリカ製品を進呈'],['📦','発送方法','ヤマト宅急便でお届け'],['🔒','個人情報','発送目的のみ使用・ランキングはニックネーム表示']].map(([ic,lb,vl])=>(<div key={lb} style={{display:'flex',gap:10,alignItems:'flex-start',marginBottom:10}}><span style={{fontSize:'1.1rem',flexShrink:0}}>{ic}</span><div><span style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.6)',display:'block'}}>{lb}</span><span style={{fontSize:'0.88rem',fontWeight:700}}>{vl}</span></div></div>))}
     </div>
-    <div style={{background:'rgba(59,191,239,0.15)',border:'2px solid #3bbfef',borderRadius:16,padding:'16px 20px',marginBottom:32}}>
-      <div style={{fontWeight:900,fontSize:'1rem',marginBottom:10,color:'#3bbfef'}}>🎁 プレゼント内容</div>
-      {[['🥇','1位','ホワイトシリカ500g＋アップルシリカシャンプー'],['🥈','2位','ホワイトシリカ500g'],['🥉','3位','ホワイトシリカ100g×2本'],['4️⃣','4位','ホワイトシリカ100g'],['5️⃣','5位','シリカオリジナルグッズ']].map(([ic,rank,prize])=>(<div key={rank} style={{display:'flex',gap:10,alignItems:'center',marginBottom:8,padding:'6px 10px',background:'rgba(255,255,255,0.08)',borderRadius:10}}><span style={{fontSize:'1.2rem'}}>{ic}</span><span style={{fontWeight:800,minWidth:32,color:'#ffd700'}}>{rank}</span><span style={{fontSize:'0.85rem'}}>{prize}</span></div>))}
+    <div style={{marginBottom:28}}>
+      <div style={{fontWeight:900,fontSize:'1.1rem',marginBottom:16,textAlign:'center',color:'#ffd700'}}>🎁 プレゼント商品ラインナップ</div>
+      <div style={{display:'flex',flexDirection:'column',gap:12}}>
+        {PRIZES.map(p=>(<div key={p.rank} style={{background:'rgba(255,255,255,0.08)',border:'1.5px solid rgba(255,255,255,0.15)',borderRadius:16,overflow:'hidden',display:'flex',alignItems:'stretch'}}>
+          <div style={{width:110,flexShrink:0,background:'rgba(0,0,0,0.2)',display:'flex',alignItems:'center',justifyContent:'center',padding:8}}>
+            <img src={p.img} alt={p.award} style={{width:'100%',height:90,objectFit:'contain',borderRadius:8}} onError={e=>{(e.target as HTMLImageElement).style.display='none'}}/>
+          </div>
+          <div style={{padding:'12px 14px',flex:1,textAlign:'left'}}>
+            <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}>
+              <span style={{fontSize:'1.2rem'}}>{p.icon}</span>
+              <span style={{fontWeight:900,fontSize:'0.88rem',color:'#ffd700'}}>{p.award}</span>
+            </div>
+            <div style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:6}}>{p.items}</div>
+            <div style={{display:'inline-block',background:'rgba(255,215,0,0.25)',border:'1px solid #ffd700',borderRadius:20,padding:'2px 10px',fontSize:'0.75rem',fontWeight:800,color:'#ffd700'}}>{p.price}</div>
+          </div>
+        </div>))}
+      </div>
     </div>
-    <div style={{background:'rgba(255,255,255,0.08)',borderRadius:16,padding:'16px 20px',marginBottom:32,textAlign:'left'}}>
-      <div style={{fontWeight:900,fontSize:'1rem',marginBottom:10,textAlign:'center'}}>✨ こんな知識が身につく！</div>
+    <div style={{background:'rgba(59,191,239,0.15)',border:'1.5px solid #3bbfef',borderRadius:16,padding:'16px 20px',marginBottom:28}}>
+      <div style={{fontWeight:900,fontSize:'1rem',marginBottom:10,color:'#3bbfef'}}>✨ こんな知識が身につく！</div>
       {['ケイ素（シリカ）が体に与える効果','シリカ製品の正しい使い方・活用術','血液・体温・腸内環境と健康の関係','毎日の食事で意識したい美容・健康習慣'].map(v=>(<div key={v} style={{display:'flex',gap:8,alignItems:'center',marginBottom:8}}><span style={{color:'#3bbfef',fontWeight:900}}>✓</span><span style={{fontSize:'0.88rem'}}>{v}</span></div>))}
     </div>
     <button onClick={()=>setStep('form')} style={{width:'100%',padding:'16px',background:'linear-gradient(135deg,#ffd700,#ff8c00)',color:'#1a1a1a',border:'none',borderRadius:16,fontSize:'1.1rem',fontWeight:900,cursor:'pointer',fontFamily:'inherit',boxShadow:'0 8px 24px rgba(255,215,0,0.4)',letterSpacing:'0.03em'}}>
