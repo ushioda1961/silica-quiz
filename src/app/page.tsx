@@ -66,7 +66,43 @@ return(<div style={S.page}><div style={S.inner}>
       <div style={{fontWeight:900,fontSize:'1rem',marginBottom:10,color:'#3bbfef'}}>✨ こんな知識が身につく！</div>
       {['ケイ素（シリカ）が体に与える効果','シリカ製品の正しい使い方・活用術','血液・体温・腸内環境と健康の関係','毎日の食事で意識したい美容・健康習慣'].map(v=>(<div key={v} style={{display:'flex',gap:8,alignItems:'center',marginBottom:8}}><span style={{color:'#3bbfef',fontWeight:900}}>✓</span><span style={{fontSize:'0.88rem'}}>{v}</span></div>))}
     </div>
-    <button onClick={()=>setStep('form')} style={{width:'100%',padding:'16px',background:'linear-gradient(135deg,#ffd700,#ff8c00)',color:'#1a1a1a',border:'none',borderRadius:16,fontSize:'1.1rem',fontWeight:900,cursor:'pointer',fontFamily:'inherit',boxShadow:'0 8px 24px rgba(255,215,0,0.4)',letterSpacing:'0.03em'}}>
+    <div style={{background:'rgba(255,255,255,0.08)',border:'1.5px solid rgba(255,255,255,0.2)',borderRadius:16,padding:'16px 20px',marginBottom:32}}>
+      <div style={{fontWeight:900,fontSize:'1rem',marginBottom:14,textAlign:'center',color:'#3bbfef'}}>🎮 ポイントルール</div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12}}>
+        <div style={{background:'rgba(6,214,160,0.15)',border:'1px solid rgba(6,214,160,0.4)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:'1.1rem',fontWeight:900,color:'#06d6a0'}}>+2 XP</div>
+          <div style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.8)',marginTop:2}}>✨ 基本問題 正解</div>
+        </div>
+        <div style={{background:'rgba(6,214,160,0.15)',border:'1px solid rgba(6,214,160,0.4)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:'1.1rem',fontWeight:900,color:'#06d6a0'}}>+4 XP</div>
+          <div style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.8)',marginTop:2}}>🔥 難問 正解</div>
+        </div>
+        <div style={{background:'rgba(239,71,111,0.15)',border:'1px solid rgba(239,71,111,0.4)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:'1.1rem',fontWeight:900,color:'#ff6b8a'}}>-1 XP</div>
+          <div style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.8)',marginTop:2}}>✨ 基本問題 不正解</div>
+        </div>
+        <div style={{background:'rgba(239,71,111,0.15)',border:'1px solid rgba(239,71,111,0.4)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:'1.1rem',fontWeight:900,color:'#ff6b8a'}}>-2 XP</div>
+          <div style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.8)',marginTop:2}}>🔥 難問 不正解</div>
+        </div>
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:6}}>
+        <div style={{background:'rgba(255,215,0,0.15)',border:'1px solid rgba(255,215,0,0.4)',borderRadius:10,padding:'8px 14px',display:'flex',alignItems:'center',gap:10}}>
+          <span style={{fontSize:'1.2rem'}}>🔥</span>
+          <div><span style={{fontWeight:800,color:'#ffd700'}}>3連続正解ボーナス</span><span style={{color:'rgba(255,255,255,0.8)',fontSize:'0.82rem',marginLeft:6}}>→ さらに +3 XP！</span></div>
+        </div>
+        <div style={{background:'rgba(255,140,0,0.15)',border:'1px solid rgba(255,140,0,0.4)',borderRadius:10,padding:'8px 14px',display:'flex',alignItems:'center',gap:10}}>
+          <span style={{fontSize:'1.2rem'}}>🔥🔥</span>
+          <div><span style={{fontWeight:800,color:'#ff8c00'}}>5連続正解ボーナス</span><span style={{color:'rgba(255,255,255,0.8)',fontSize:'0.82rem',marginLeft:6}}>→ さらに +5 XP！</span></div>
+        </div>
+        <div style={{background:'rgba(239,71,111,0.1)',border:'1px solid rgba(239,71,111,0.3)',borderRadius:10,padding:'8px 14px',display:'flex',alignItems:'center',gap:10}}>
+          <span style={{fontSize:'1.2rem'}}>💀</span>
+          <div><span style={{fontWeight:800,color:'#ff6b8a'}}>連続ミスペナルティ</span><span style={{color:'rgba(255,255,255,0.8)',fontSize:'0.82rem',marginLeft:6}}>→ さらに -1 XP</span></div>
+        </div>
+      </div>
+      <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.5)',textAlign:'center',marginTop:10,marginBottom:0}}>※ XPは0以下にはなりません</p>
+    </div>
+        <button onClick={()=>setStep('form')} style={{width:'100%',padding:'16px',background:'linear-gradient(135deg,#ffd700,#ff8c00)',color:'#1a1a1a',border:'none',borderRadius:16,fontSize:'1.1rem',fontWeight:900,cursor:'pointer',fontFamily:'inherit',boxShadow:'0 8px 24px rgba(255,215,0,0.4)',letterSpacing:'0.03em'}}>
       🚀 無料で参加登録する
     </button>
     <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.5)',marginTop:10}}>登録後すぐにクイズに挑戦できます</p>
