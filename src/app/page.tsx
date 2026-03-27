@@ -22,7 +22,7 @@ async function submit(){
   setErr('')
   const{nickname,name,postal,address,tel,email}=form
   if(!nickname||!name||!postal||!address||!tel||!email){setErr('すべての項目を入力してください');return}
-  if(!/^[^s@]+@[^s@]+.[^s@]+$/.test(email)){setErr('メールアドレスの形式が正しくありません');return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setErr('メールアドレスの形式が正しくありません');return}
   setLoading(true)
   const{data:ex}=await sb.from('silica_quiz_users').select('id,email').eq('email',email).single()
   if(ex){window.location.href='/quiz';return}
