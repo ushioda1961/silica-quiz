@@ -43,7 +43,7 @@ async function submit(){
   if(dup){setErr('そのニックネームはすでに使われています');setLoading(false);return}
   const{error}=await sb.from('silica_quiz_users').insert({nickname,name,postal,address,tel,email,total_xp:0,email_notify:true})
   if(error){setErr('登録に失敗しました。もう一度お試しください');setLoading(false);return}
-  setLoading(false);setStep('done')
+  fetch('/api/send-welcome',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:form.email,nickname:form.nickname})}).catch(()=>{});setLoading(false);setStep('done')
 }
 const S={page:{minHeight:'100vh',background:'linear-gradient(160deg,#0a2a4a 0%,#0d3b6e 40%,#1565a0 100%)',fontFamily:"'M PLUS Rounded 1c',Helvetica,sans-serif",color:'white'},inner:{maxWidth:640,margin:'0 auto',padding:'0 16px 60px'}}
 return(<div style={S.page}><div style={S.inner}>
