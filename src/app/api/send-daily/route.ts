@@ -1,7 +1,8 @@
 import{NextRequest,NextResponse}from'next/server'
 import{createClient}from'@supabase/supabase-js'
 const sb=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-export async function GET(req:NextRequest){
+export const dynamic='force-dynamic'
+export async function GET(req:NextRequest){}
   try{
     const{data:users}=await sb.from('silica_quiz_users').select('email,nickname').eq('email_notify',true)
     if(!users||users.length===0)return NextResponse.json({ok:true,sent:0})
@@ -21,7 +22,7 @@ export async function GET(req:NextRequest){
         if(res.ok)sent++
       }catch(e){console.error('mail error:',u.email)}
     }
-    return NextResponse.json({ok:true,sent,total:users.length})
+        return NextResponse.json({ok:true,sent,total:users.length},{headers:{'Cache-Control':'no-store'}})
   }catch(e:unknown){
     return NextResponse.json({error:String(e)},{status:500})
   }
