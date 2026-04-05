@@ -2,7 +2,7 @@ import{NextRequest,NextResponse}from'next/server'
 import{createClient}from'@supabase/supabase-js'
 const sb=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 export const dynamic='force-dynamic'
-export async function GET(req:NextRequest){
+export async function GET(req:NextRequest){  if(req.headers.get('authorization')!=='Bearer '+process.env.CRON_SECRET){return NextResponse.json({error:'Unauthorized'},{status:401})}
   try{
     const{data:users}=await sb.from('silica_quiz_users').select('email,nickname').eq('email_notify',true)
     if(!users||users.length===0)return NextResponse.json({ok:true,sent:0})
